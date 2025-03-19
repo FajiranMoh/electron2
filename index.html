@@ -51,7 +51,7 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <!-- <div class="container">
     <h1>Inventory Application</h1>
     <p>Click the button below to start the inventory server</p>
     <button id="startButton">Start Server</button>
@@ -89,6 +89,58 @@
         }
       });
     });
+  </script> -->
+  <div class="container">
+    <h1>Inventory Application</h1>
+    <p>Enter database credentials and start the server:</p>
+  
+    <input id="server" type="text" placeholder="Server (e.g., localhost)" required>
+    <input id="port" type="number" placeholder="Port (default: 1433)" required>
+    <input id="user" type="text" placeholder="Username" required>
+    <input id="password" type="password" placeholder="Password" required>
+    <input id="database" type="text" placeholder="Database Name" required>
+    <input id="instance" type="text" placeholder="Instance (optional)">
+  
+    <button id="startButton">Start Server</button>
+    <div id="status"></div>
+    <div id="serverUrl" class="url"></div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const startButton = document.getElementById('startButton');
+      const statusElement = document.getElementById('status');
+      const serverUrlElement = document.getElementById('serverUrl');
+  
+      startButton.addEventListener('click', async () => {
+        statusElement.textContent = 'Starting server...';
+  
+        const dbConfig = {
+          server: document.getElementById('server').value,
+          port: document.getElementById('port').value || "1433",
+          user: document.getElementById('user').value,
+          password: document.getElementById('password').value,
+          database: document.getElementById('database').value,
+          instance: document.getElementById('instance').value || null
+        };
+  
+        try {
+          const result = await window.api.startServer(dbConfig);
+  
+          if (result.status === 'started') {
+            statusElement.textContent = 'Server running successfully!';
+            serverUrlElement.textContent = `http://localhost:${result.port}/inventory`;
+            serverUrlElement.style.display = 'block';
+            startButton.disabled = true;
+          } else {
+            statusElement.textContent = `Failed to start server: ${result.message}`;
+          }
+        } catch (error) {
+          statusElement.textContent = `Error: ${error.message}`;
+        }
+      });
+    });
   </script>
+  
 </body>
 </html>
