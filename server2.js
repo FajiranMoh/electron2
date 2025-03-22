@@ -99,6 +99,8 @@ const dbConfig = {
   port: parseInt(process.env.DB_PORT) || 1433
 };
 
+
+
 // Connect to MS SQL Server
 async function connectToDatabase() {
   try {
